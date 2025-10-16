@@ -6,25 +6,28 @@ html
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Modern Calculator</title>
 <style>
-  /* Reset and base styles */
-  * {
-    box-sizing: border-box;
+  :root {
+    --primary-color: #4CAF50;
+    --button-color: #fff;
+    --background-color: #f9f9f9;
+    --border-radius: 8px;
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
   }
 
   body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5;
     margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    justify-content: center;
+    height: 100vh;
   }
 
   .calculator {
     background: #fff;
-    border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-radius: var(--border-radius);
     width: 90%;
     max-width: 400px;
     padding: 20px;
@@ -33,12 +36,12 @@ html
   }
 
   .display {
-    background-color: #222;
+    background: #222;
     color: #fff;
     font-size: 2em;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
     text-align: right;
     overflow-wrap: break-word;
   }
@@ -46,176 +49,171 @@ html
   .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
+    gap: 10px;
   }
 
   button {
-    background-color: #fff;
-    border: none;
-    border-radius: 8px;
     padding: 20px 0;
     font-size: 1.2em;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--button-color);
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s, transform 0.1s;
   }
 
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  button:active {
+    transform: scale(0.98);
+    background-color: #e0e0e0;
   }
 
-  button.operator {
-    background-color: #0575e6;
+  /* Specific styles for operation buttons */
+  .operator {
+    background-color: var(--primary-color);
     color: #fff;
   }
 
-  button.equals {
-    background-color: #28a745;
-    color: #fff;
-    grid-column: span 2;
+  .operator:active {
+    background-color: #45a049;
   }
 
-  button.clear {
-    background-color: #dc3545;
-    color: #fff;
-  }
-
-  @media(max-width: 500px){
-    .buttons {
-      grid-template-columns: repeat(4, 1fr);
+  @media(max-width: 500px) {
+    body {
+      padding: 10px;
+    }
+    .calculator {
+      padding: 15px;
     }
   }
 </style>
 </head>
 <body>
-  <div class="calculator">
-    <div id="display" class="display">0</div>
-    <div class="buttons">
-      <button class="clear" id="clear">C</button>
-      <button class="operator" data-op="/">&#247;</button>
-      <button class="operator" data-op="*">&times;</button>
-      <button class="operator" data-op="-">−</button>
-
-      <button data-digit="7">7</button>
-      <button data-digit="8">8</button>
-      <button data-digit="9">9</button>
-      <button class="operator" data-op="+">+</button>
-
-      <button data-digit="4">4</button>
-      <button data-digit="5">5</button>
-      <button data-digit="6">6</button>
-      <button class="equals" id="equals">=</button>
-
-      <button data-digit="1">1</button>
-      <button data-digit="2">2</button>
-      <button data-digit="3">3</button>
-      <button></button> <!-- Empty placeholder for grid alignment -->
-
-      <button data-digit="0">0</button>
-      <button data-digit=".">.</button>
-    </div>
+<div class="calculator">
+  <div id="display" class="display">0</div>
+  <div class="buttons">
+    <button data-action="clear">C</button>
+    <button data-action="divide" class="operator">/</button>
+    <button data-action="multiply" class="operator">*</button>
+    <button data-action="subtract" class="operator">-</button>
+    
+    <button data-digit="7">7</button>
+    <button data-digit="8">8</button>
+    <button data-digit="9">9</button>
+    <button data-action="add" class="operator">+</button>
+    
+    <button data-digit="4">4</button>
+    <button data-digit="5">5</button>
+    <button data-digit="6">6</button>
+    <button data-equal="=">=</button>
+    
+    <button data-digit="1">1</button>
+    <button data-digit="2">2</button>
+    <button data-digit="3">3</button>
+    <!-- Empty placeholder for layout symmetry -->
+    <button style="visibility:hidden;"></button>
+    
+    <button data-digit="0">0</button>
+    <button data-digit=".">.</button>
   </div>
-
+</div>
 <script>
   const display = document.getElementById('display');
-  const buttons = document.querySelectorAll('.buttons button');
+  const buttons = document.querySelectorAll('button');
 
   let currentInput = '';
   let previousInput = '';
-  let lastOperator = null;
-  let shouldResetScreen = false;
+  let operation = null;
+  let resetNext = false;
 
   function updateDisplay() {
     display.textContent = currentInput || '0';
   }
 
+  function clearAll() {
+    currentInput = '';
+    previousInput = '';
+    operation = null;
+    resetNext = false;
+    updateDisplay();
+  }
+
   function appendNumber(number) {
+    if (resetNext) {
+      currentInput = '';
+      resetNext = false;
+    }
     if (number === '.' && currentInput.includes('.')) return;
     if (currentInput === '0' && number !== '.') {
       currentInput = number;
     } else {
       currentInput += number;
     }
+    updateDisplay();
   }
 
-  function chooseOperator(operator) {
-    if (currentInput === '') return;
+  function chooseOperation(op) {
+    if (currentInput === '' && op !== 'clear') return;
     if (previousInput !== '') {
-      calculate();
+      compute();
     } else {
       previousInput = currentInput;
     }
-    lastOperator = operator;
+    operation = op;
     currentInput = '';
   }
 
-  function calculate() {
+  function compute() {
     let prev = parseFloat(previousInput);
     let current = parseFloat(currentInput);
     if (isNaN(prev) || isNaN(current)) return;
 
-    let result;
-    switch (lastOperator) {
-      case '+':
-        result = prev + current;
+    switch (operation) {
+      case 'add':
+        prev += current;
         break;
-      case '-':
-        result = prev - current;
+      case 'subtract':
+        prev -= current;
         break;
-      case '*':
-        result = prev * current;
+      case 'multiply':
+        prev *= current;
         break;
-      case '/':
+      case 'divide':
         if (current === 0) {
           alert("Error: Cannot divide by zero");
-          clear();
+          clearAll();
           return;
         }
-        result = prev / current;
+        prev /= current;
         break;
       default:
         return;
     }
-    currentInput = String(result);
-    previousInput = '';
-    lastOperator = null;
-  }
 
-  function clear() {
-    currentInput = '';
+    currentInput = prev.toString();
     previousInput = '';
-    lastOperator = null;
+    operation = null;
     updateDisplay();
   }
 
-  buttons.forEach(button => {
-    if (button.hasAttribute('data-digit')) {
-      button.addEventListener('click', () => {
-        appendNumber(button.getAttribute('data-digit'));
-        updateDisplay();
-      });
-    } else if (button.hasAttribute('data-op')) {
-      button.addEventListener('click', () => {
-        chooseOperator(button.getAttribute('data-op'));
-        updateDisplay();
-      });
-    }
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      const digit = btn.datasetDigit;
+      if (digit !== undefined) {
+        appendNumber(digit);
+      } else if (action) {
+        if (action === 'clear') {
+          clearAll();
+        } else if (['add','subtract','multiply','divide'].includes(action)) {
+          chooseOperation(action);
+        }
+      } else if (btn.hasAttribute('data-equal')) {
+        if (currentInput !== '' && previousInput !== '' && operation) {
+          compute();
+        }
+      }
+    });
   });
-
-  document.getElementById('equals').addEventListener('click', () => {
-    if (lastOperator && currentInput !== '' && previousInput !== '') {
-      calculate();
-      updateDisplay();
-    }
-  });
-
-  document.getElementById('clear').addEventListener('click', () => {
-    clear();
-  });
-
-  // Initialize display
-  updateDisplay();
 </script>
 </body>
 </html>
