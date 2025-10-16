@@ -1,21 +1,20 @@
-**Project Overview:**  
-This is a modern, responsive calculator web application built with HTML, CSS, and vanilla JavaScript. It supports basic arithmetic operations (addition, subtraction, multiplication, division), includes a clear function, and gracefully handles invalid inputs, such as division by zero. The design emphasizes a clean, attractive look with smooth button animations and adaptability for various devices.
+**Project Overview**  
+This is a modern, responsive calculator web application built to perform basic arithmetic operations: addition, subtraction, multiplication, and division. The app features a clean and attractive UI with animated buttons for a smooth user experience. It supports clearing input and handles invalid operations like division by zero gracefully.
 
-**Setup Instructions:**  
-- Save the provided code into an `.html` file, e.g., `calculator.html`.  
-- Open the file in any web browser to use the calculator. No external dependencies or setup steps are required.
+**Setup Instructions**  
+Simply open the `.html` file in any modern web browser to run the calculator. No additional setup or external dependencies are required.
 
-**Usage Guide:**  
-- Click on digit buttons (0-9) and the decimal point to enter numbers.  
-- Use the operator buttons (+, −, ×, ÷) to specify the operation.  
-- Click the '=' button to compute and display the result.  
-- Use the 'C' button to clear the current input and reset the calculator.  
-- The calculator initializes with a default display of '0'.  
-- Handles attempts to divide by zero by showing an alert and resetting.
+**Usage Guide**  
+- Click number buttons (0-9) or '.' to enter the first operand.
+- Click an operation button (+, -, *, /) to select the operation.
+- Enter the second operand with number buttons.
+- Click '=' to perform the calculation, which displays the result.
+- Click 'C' to clear all inputs and reset the calculator.
+- Invalid operations like dividing by zero will show an alert and reset the calculator.
 
-**Enhancements from Iteration 0:**  
-- Implemented a fully functional calculator supporting continuous calculations.  
-- Added graceful handling for division by zero using alert and reset.  
-- Improved UI responsiveness and aesthetics, including grid layout, animations, and responsive media queries.  
-- Modularized event handling for clarity and maintainability.  
-- Ensured the display updates dynamically to reflect user input and results.
+**Enhancements from Previous Version**  
+- Implemented a responsive grid layout for better mobile and desktop compatibility.
+- Added animations to buttons for a smooth pressing effect.
+- Input validation to prevent multiple decimals and handle errors gracefully.
+- Improved UI styling for a more modern and attractive look.
+- Simplified JavaScript logic for clarity and maintainability.
