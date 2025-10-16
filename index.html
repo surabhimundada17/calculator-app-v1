@@ -1,0 +1,221 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modern Calculator</title>
+<style>
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .calculator {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .display {
+    background-color: #222;
+    color: #fff;
+    font-size: 2em;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: right;
+    overflow-wrap: break-word;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+  }
+
+  button {
+    background-color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 20px 0;
+    font-size: 1.2em;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  button.operator {
+    background-color: #0575e6;
+    color: #fff;
+  }
+
+  button.equals {
+    background-color: #28a745;
+    color: #fff;
+    grid-column: span 2;
+  }
+
+  button.clear {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  @media(max-width: 500px){
+    .buttons {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="clear" id="clear">C</button>
+      <button class="operator" data-op="/">&#247;</button>
+      <button class="operator" data-op="*">&times;</button>
+      <button class="operator" data-op="-">−</button>
+
+      <button data-digit="7">7</button>
+      <button data-digit="8">8</button>
+      <button data-digit="9">9</button>
+      <button class="operator" data-op="+">+</button>
+
+      <button data-digit="4">4</button>
+      <button data-digit="5">5</button>
+      <button data-digit="6">6</button>
+      <button class="equals" id="equals">=</button>
+
+      <button data-digit="1">1</button>
+      <button data-digit="2">2</button>
+      <button data-digit="3">3</button>
+      <button></button> <!-- Empty placeholder for grid alignment -->
+
+      <button data-digit="0">0</button>
+      <button data-digit=".">.</button>
+    </div>
+  </div>
+
+<script>
+  const display = document.getElementById('display');
+  const buttons = document.querySelectorAll('.buttons button');
+
+  let currentInput = '';
+  let previousInput = '';
+  let lastOperator = null;
+  let shouldResetScreen = false;
+
+  function updateDisplay() {
+    display.textContent = currentInput || '0';
+  }
+
+  function appendNumber(number) {
+    if (number === '.' && currentInput.includes('.')) return;
+    if (currentInput === '0' && number !== '.') {
+      currentInput = number;
+    } else {
+      currentInput += number;
+    }
+  }
+
+  function chooseOperator(operator) {
+    if (currentInput === '') return;
+    if (previousInput !== '') {
+      calculate();
+    } else {
+      previousInput = currentInput;
+    }
+    lastOperator = operator;
+    currentInput = '';
+  }
+
+  function calculate() {
+    let prev = parseFloat(previousInput);
+    let current = parseFloat(currentInput);
+    if (isNaN(prev) || isNaN(current)) return;
+
+    let result;
+    switch (lastOperator) {
+      case '+':
+        result = prev + current;
+        break;
+      case '-':
+        result = prev - current;
+        break;
+      case '*':
+        result = prev * current;
+        break;
+      case '/':
+        if (current === 0) {
+          alert("Error: Cannot divide by zero");
+          clear();
+          return;
+        }
+        result = prev / current;
+        break;
+      default:
+        return;
+    }
+    currentInput = String(result);
+    previousInput = '';
+    lastOperator = null;
+  }
+
+  function clear() {
+    currentInput = '';
+    previousInput = '';
+    lastOperator = null;
+    updateDisplay();
+  }
+
+  buttons.forEach(button => {
+    if (button.hasAttribute('data-digit')) {
+      button.addEventListener('click', () => {
+        appendNumber(button.getAttribute('data-digit'));
+        updateDisplay();
+      });
+    } else if (button.hasAttribute('data-op')) {
+      button.addEventListener('click', () => {
+        chooseOperator(button.getAttribute('data-op'));
+        updateDisplay();
+      });
+    }
+  });
+
+  document.getElementById('equals').addEventListener('click', () => {
+    if (lastOperator && currentInput !== '' && previousInput !== '') {
+      calculate();
+      updateDisplay();
+    }
+  });
+
+  document.getElementById('clear').addEventListener('click', () => {
+    clear();
+  });
+
+  // Initialize display
+  updateDisplay();
+</script>
+</body>
+</html>
