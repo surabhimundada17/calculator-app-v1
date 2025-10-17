@@ -1,23 +1,21 @@
 **Project Overview:**  
-This is a modern, responsive calculator web application built with HTML, CSS, and JavaScript. It provides basic arithmetic operations (addition, subtraction, multiplication, division), a clear function, and a user-friendly, animated UI suitable for both mobile and desktop environments.
+This is an upgraded, modern, responsive calculator web application that includes basic arithmetic operations and adds scientific functions such as sine (sin), cosine (cos), tangent (tan), and square root (√). The UI features a sleek, animated design with gradient buttons and adaptive layout for both mobile and desktop environments.
 
 **Setup Instructions:**  
-- Save the code above as an `.html` file, e.g., `calculator.html`.
-- Open the file in any modern web browser.
+- Save the above code as an `.html` file, e.g., `scientific_calculator.html`.  
+- Open the file in any modern web browser to use the calculator.
 
 **Usage Guide:**  
-- Click the digit buttons (0-9) or the decimal point "." to input numbers.
-- Use the operation buttons (+, −, ×, ÷) to select an arithmetic operation.
-- Press "=" to perform the calculation.
-- The display shows the current input or result.
-- Press "C" to clear the calculator and reset the display.
+- Click number buttons (0-9) and decimal point "." to input numbers.  
+- Click operation buttons (+, −, ×, ÷) to select an arithmetic operation.  
+- To perform scientific functions, click one of the top scientific buttons (sin, cos, tan, √) after entering a number or a result; it applies the function to the current input.  
+- Use "=" to compute the current expression's result.  
+- Press "C" to clear the calculator.  
+- The display updates in real-time with each interaction.  
+- Handles errors such as division by zero or invalid square root inputs gracefully with alerts.
 
-**Enhancements in This Edition:**  
-- Implemented smooth button animations on hover and active states.
-- Designed a clean, modern aesthetic with gradient backgrounds and rounded buttons.
-- Responsiveness ensures optimal display on all device sizes by using CSS Grid and flexible sizing.
-- Gracefully handles invalid input scenarios such as division by zero, alerting the user and resetting the calculator state.
-- The calculator maintains a logical input flow, supporting chain calculations and decimal entries.
-  
-**Note:**  
-The calculator performs basic operations and ensures inputs are valid. The display updates in real-time with user interactions, providing an intuitive and attractive user experience.
+**Enhancements from Previous Version:**  
+- Added scientific functions (sin, cos, tan, sqrt) accessible via dedicated buttons.  
+- Maintained all existing functions such as basic arithmetic, clear, and responsive design.  
+- Improved user experience with animated buttons that respond nicely on hover and click.  
+- Robust input handling ensuring the calculator performs accurately and handles invalid inputs cleanly.
